@@ -1,42 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --background: 42 40% 97%;
+  --foreground: 201 28% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 201 28% 17%;
+  --primary: 193 72% 25%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 154 36% 90%;
+  --secondary-foreground: 170 66% 18%;
+  --muted: 45 33% 92%;
+  --muted-foreground: 210 13% 37%;
+  --accent: 22 86% 66%;
+  --accent-foreground: 30 50% 15%;
+  --border: 42 23% 84%;
+  --ring: 193 72% 25%;
+  --radius: 0.9rem;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  @apply border-border;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-ui), sans-serif;
+  background-image:
+    radial-gradient(circle at 20% -10%, rgba(232, 246, 242, 0.92), transparent 35%),
+    radial-gradient(circle at 90% -18%, rgba(255, 233, 207, 0.88), transparent 38%);
 }
