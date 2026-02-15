@@ -190,21 +190,22 @@ export default function NewPostPage() {
             <Textarea className="min-h-28" value={memo} onChange={(e) => setMemo(e.target.value)} maxLength={200} />
           </div>
 
-          <div className="space-y-2">
-            <Label>商品群配分: 合計 {total}% (100%必須)</Label>
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              {Object.entries(allocations).map(([key, value]) => (
-                <div key={key}>
-                  <Label className="text-xs">{allocationLabels[key as AllocationKey]}</Label>
-                  <Input type="number" min={0} max={100} value={value} onChange={(e) => setAllocations((prev) => ({ ...prev, [key]: Number(e.target.value) }))} />
-                </div>
-              ))}
+          <div className="md:col-span-2 grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label>商品群配分: 合計 {total}% (100%必須)</Label>
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                {Object.entries(allocations).map(([key, value]) => (
+                  <div key={key}>
+                    <Label className="text-xs">{allocationLabels[key as AllocationKey]}</Label>
+                    <Input type="number" min={0} max={100} value={value} onChange={(e) => setAllocations((prev) => ({ ...prev, [key]: Number(e.target.value) }))} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          <div className="rounded-lg border border-border p-3">
-            <p className="mb-2 text-sm font-medium">配分プレビュー（円グラフ）</p>
-            <AllocationPie allocations={allocations} />
+            <div className="rounded-lg border border-border p-3">
+              <p className="mb-2 text-sm font-medium">商品群の結果（円グラフ）</p>
+              <AllocationPie allocations={allocations} pieClassName="h-80 w-80" />
+            </div>
           </div>
 
           <div className="md:col-span-2 flex flex-wrap gap-2">

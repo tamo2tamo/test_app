@@ -1,10 +1,12 @@
 "use client";
 
 import { AdPlaceholder } from "@/components/ad-placeholder";
+import { AllocationPie } from "@/components/allocation-pie";
 import { Disclaimer } from "@/components/disclaimer";
 import { PostCard } from "@/components/post-card";
 import { useSearchResults } from "@/components/search-hook";
 import { SiteHeader } from "@/components/site-header";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function HomePage() {
@@ -19,6 +21,27 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>{controls}</CardContent>
       </Card>
+      {results[0] && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">サンプル情報</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-2">
+                <Badge>{results[0].post.profile.age}代</Badge>
+                <Badge>{results[0].post.profile.occupation}</Badge>
+                <Badge>一致 {results[0].matchScore}</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                利回り過去1年: {results[0].post.performance.oneYear}% / 利回り開始来: {results[0].post.performance.sinceStart}%
+              </p>
+              <p className="text-sm text-muted-foreground line-clamp-3">{results[0].post.memo}</p>
+            </div>
+            <AllocationPie allocations={results[0].post.allocations} pieClassName="h-80 w-80" />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="space-y-4">

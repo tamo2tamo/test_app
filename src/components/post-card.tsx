@@ -34,7 +34,7 @@ export function PostCard({ result }: { result: SearchResult }) {
           <div className="text-sm text-muted-foreground">利回り過去1年: {post.performance.oneYear}% / 利回り開始来: {post.performance.sinceStart}%</div>
           <div className="text-sm text-muted-foreground">人気指標: 閲覧 {post.views} / 通報 {post.reports}</div>
         </div>
-        <AllocationPie allocations={post.allocations} pieClassName="h-56 w-56" />
+        <AllocationPie allocations={post.allocations} pieClassName="h-72 w-72" />
       </CardContent>
     </Card>
   );
