@@ -1,10 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { AllocationMap } from "@/lib/types";
 
 const COLORS = ["#114b5f", "#1a936f", "#88d498", "#f3e9d2", "#f4a259", "#ef5b5b", "#3f72af", "#8e9aaf", "#f28482", "#84a59d", "#f6bd60", "#9a8c98"];
 
-export function AllocationPie({ allocations }: { allocations: AllocationMap }) {
+export function AllocationPie({ allocations, pieClassName }: { allocations: AllocationMap; pieClassName?: string }) {
   const entries = Object.entries(allocations).filter(([, v]) => v > 0);
   let angle = 0;
   const stops: string[] = [];
@@ -18,7 +19,7 @@ export function AllocationPie({ allocations }: { allocations: AllocationMap }) {
     <Card className="p-4">
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <div
-          className="mx-auto h-44 w-44 rounded-full border border-border"
+          className={cn("mx-auto h-44 w-44 rounded-full border border-border", pieClassName)}
           style={{ background: `conic-gradient(${stops.join(",")})` }}
           aria-label="配分円グラフ"
         />
