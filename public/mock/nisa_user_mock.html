@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NISA運用者 匿名投稿モック</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #212838;
+      --muted: #58627a;
+      --line: #dce3f2;
+      --brand: #1674ea;
+      --accent: #0cba99;
+      --warn: #dc4f4f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background:
+        radial-gradient(circle at top right, #eaf0ff 0%, #f5f7fb 40%, #f5f7fb 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 20px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 14px;
+    }
+    .brand { font-weight: 700; letter-spacing: 0.03em; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .btn, button, select, input, textarea {
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: inherit;
+    }
+    .btn, button {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn.primary, button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .btn.soft, button.soft { border-color: #b9d4ff; background: #edf4ff; color: #0e4fa2; }
+    .mock {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .mock-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .mock-title { margin: 0; font-size: 18px; }
+    .mock-sub { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .hero {
+      border-bottom: 1px solid var(--line);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+    }
+    .hero h2 { margin: 0 0 8px; font-size: 25px; }
+    .hero p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .hero-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chips span {
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 4px 10px;
+      background: #fff;
+      font-size: 12px;
+      color: #4b5770;
+    }
+    .body {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .panel h3 { margin: 0 0 10px; font-size: 16px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .panel label { display: block; font-size: 12px; color: var(--muted); }
+    .panel select, .panel input, .panel textarea { width: 100%; margin-top: 4px; padding: 8px 10px; }
+    .note { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+    .post-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+    .post-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+    .post-title { margin: 0 0 6px; font-size: 17px; }
+    .score { color: #0b846f; font-weight: 700; }
+    .metric { margin: 0 0 7px; }
+    .pie-wrap { display: flex; gap: 12px; align-items: center; margin: 8px 0 10px; }
+    .pie-chart {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      border: 1px solid #cfd8ea;
+      flex-shrink: 0;
+      background: conic-gradient(#e6edf9 0deg 360deg);
+    }
+    .sample-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 8px 0 10px;
+    }
+    .sample-layout .pie-chart {
+      width: 180px;
+      height: 180px;
+      margin-left: auto;
+      margin-right: auto;
+      border-width: 2px;
+    }
+    .sample-layout .pie-legend { font-size: 13px; }
+    .pie-legend { font-size: 12px; color: #4b5770; line-height: 1.5; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .tags span {
+      background: #eef4ff;
+      border: 1px solid #d5e5ff;
+      border-radius: 100px;
+      padding: 2px 8px;
+      font-size: 12px;
+      color: #345a8f;
+    }
+    .react { display: flex; gap: 8px; }
+    .react button { font-size: 12px; padding: 7px 10px; }
+    .ad {
+      border: 1px dashed #9ab5de;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      color: #55719b;
+      font-size: 13px;
+      background: #f6faff;
+      margin-bottom: 10px;
+    }
+    .submit-wrap { border-top: 1px solid var(--line); padding: 16px; }
+    .submit-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .submit-grid .span-all { grid-column: 1 / -1; }
+    .submit-grid .span-all textarea { min-height: 110px; }
+    .alloc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .submit-alloc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+      align-items: start;
+    }
+    .submit-pie-preview {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+    .submit-pie-preview .pie-chart {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 10px;
+      border-width: 2px;
+    }
+    .alloc-total {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #365987;
+      font-weight: 700;
+    }
+    .submit-note-wide {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: #f8fbff;
+    }
+    .submit-note-wide textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+    }
+    .footer-note { border-top: 1px solid var(--line); padding: 12px 16px; color: var(--muted); font-size: 12px; }
+
+    .mock {
+      --brand: #1b74e4;
+      --line: #d7deeb;
+      --bg: #eff2f5;
+    }
+    .mock .mock-head { background: #fff; }
+    .mock .brand-chip { color: #1b74e4; font-weight: 700; }
+    .mock .hero { background: #f3f6fb; }
+    .mock .post-card { box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06); }
+    .mock .tags span { background: #e7f3ff; border-color: #cbe0ff; color: #1b5aaa; }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .body { grid-template-columns: 1fr; }
+      .submit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sample-layout { grid-template-columns: 1fr; }
+      .submit-alloc-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .grid2 { grid-template-columns: 1fr; }
+      .submit-grid { grid-template-columns: 1fr; }
+      .alloc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="top">
+      <div class="brand">NISA運用者 匿名投稿モック（利用者画面）</div>
+      <div class="top-actions"></div>
+    </header>
+    <section class="mock" id="main">
+      <div class="mock-head">
+        <div>
+          <h1 class="mock-title"><span class="brand-chip">NISA Feed</span></h1>
+          <p class="mock-sub">親しみやすく情報密度を抑えたフィード型</p>
+        </div>
+        <div>
+          <button class="btn soft">人気順</button>
+          <button class="btn primary">投稿する</button>
+          <button class="btn primary">新規登録する</button>
+        </div>
+      </div>
+      <div class="hero">
+        <div>
+          <h2>似た人の配分と成績を、すぐ比較</h2>
+          <p>投稿は匿名。コメントなし。通報と前向きリアクションのみで荒れを抑制。</p>
+        </div>
+        <div class="hero-card">
+          <strong>あなたに近いケース</strong>
+          <div class="chips">
+            <span>一致スコア重み: 属性40%</span><span>配分40%</span><span>成績20%</span>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <aside class="panel">
+          <h3>検索フィルタ</h3>
+          <p class="note">投稿項目と同体系。家族構成/住居は検索対象外。</p>
+          <div class="grid2">
+            <label>年代<select id="fbSearchAge"><option>40代</option><option>20代</option><option>30代</option><option>50代</option><option>60代+</option></select></label>
+            <label>職業<select id="fbSearchOccupation"><option>公務員</option><option>会社員</option><option>自営業</option><option>学生</option><option>無職</option><option>その他</option></select></label>
+            <label>年収帯<select id="fbSearchIncome"><option>800-1200</option><option>〜300</option><option>300-500</option><option>500-800</option><option>1200〜</option><option>回答しない</option></select></label>
+            <label>投資歴<select id="fbSearchExperience"><option>5-10年</option><option>〜1年</option><option>1-3年</option><option>3-5年</option><option>10年以上</option></select></label>
+            <label>NISA<select id="fbSearchNisa"><option>つみたてのみ</option><option>成長のみ</option><option>両方</option></select></label>
+            <label>リスク許容度<select id="fbSearchRisk"><option>低</option><option>中</option><option>高</option></select></label>
+            <label>投資方針<select id="fbSearchPolicy"><option>長期積立</option><option>バランス</option><option>攻め</option></select></label>
+            <label>投資/現金<select id="fbSearchRatio"><option>10 / 90</option><option>5 / 95</option><option>25 / 75</option><option>50 / 50</option></select></label>
+          </div>
+          <button id="fbSearchBtn" class="primary" type="button">近いケースを表示</button>
+          <p id="fbSearchStatus" class="note"></p>
+        </aside>
+        <main>
+          <div class="ad">広告枠（一覧）</div>
+          <div id="fbResults">
+            <article class="post-card" data-static="1">
+              <div class="post-head"><span>40代 / 公務員</span><span class="score">一致スコア: 8 / 8</span></div>
+              <div style="margin-bottom:8px;"><a class="btn" href="nisa_post_detail.html?id=SAMPLE-001">詳細を見る</a></div>
+              <h3 class="post-title">投信（海外インデックス）中心の運用</h3>
+              <div class="sample-layout">
+                <div>
+                  <p class="metric">過去1年: <strong>+6.4%</strong> / 開始来: <strong>+21.0%</strong></p>
+                  <div class="tags"><span>つみたてのみ</span><span>長期積立</span><span>投資10 / 現金90</span></div>
+                  <div class="pie-legend">投信（海外インデックス）50% / 株（海外）18% / 債券（国内）14%</div>
+                </div>
+                <div class="pie-chart" style="background: conic-gradient(#1b74e4 0deg 180deg, #39a0ed 180deg 244.8deg, #7cc6fe 244.8deg 295.2deg, #84dcc6 295.2deg 338.4deg, #a37acc 338.4deg 360deg);"></div>
+              </div>
+              <div class="react"><button>参考になった</button><button>共感した</button><button>真似したい</button></div>
+            </article>
+          </div>
+        </main>
+      </div>
+      <div class="submit-wrap" id="submit">
+        <h3>投稿</h3>
+        <p class="note">商品群ごとの配分を入力し、合計100%にして投稿してください（自由記述は200字以内）。</p>
+        <div class="submit-grid">
+          <label>表示名<input id="fbDisplayName" type="text" maxlength="20" value="nisa_fb_user" /></label>
+          <label>年代<select id="fbSubmitAge"><option>40代</option><option>20代</option><option>30代</option><option>50代</option><option>60代+</option></select></label>
+          <label>職業<select id="fbSubmitOccupation"><option>公務員</option><option>会社員</option><option>自営業</option><option>学生</option><option>無職</option><option>その他</option></select></label>
+          <label>年収帯<select id="fbSubmitIncome"><option>800-1200</option><option>〜300</option><option>300-500</option><option>500-800</option><option>1200〜</option><option>回答しない</option></select></label>
+          <label>投資歴<select id="fbSubmitExperience"><option>5-10年</option><option>〜1年</option><option>1-3年</option><option>3-5年</option><option>10年以上</option></select></label>
+          <label>NISA<select id="fbSubmitNisa"><option>つみたてのみ</option><option>成長のみ</option><option>両方</option></select></label>
+          <label>リスク許容度<select id="fbSubmitRisk"><option>低</option><option>中</option><option>高</option></select></label>
+          <label>投資方針<select id="fbSubmitPolicy"><option>長期積立</option><option>バランス</option><option>攻め</option></select></label>
+          <label>家族構成<select id="fbSubmitFamily"><option>既婚子あり</option><option>独身</option><option>既婚子なし</option><option>その他</option></select></label>
+          <label>住居<select id="fbSubmitHousing"><option>持家</option><option>賃貸</option></select></label>
+          <label>投資/現金比率<select id="fbSubmitRatio"><option>10 / 90</option><option>5 / 95</option><option>25 / 75</option><option>50 / 50</option></select></label>
+          <label>利回り過去1年(%)<input id="fbSubmitPerf1y" type="number" value="6.4" min="-1000" max="1000" /></label>
+          <label>利回り開始来(%)<input id="fbSubmitPerfSince" type="number" value="21.0" min="-1000" max="1000" /></label>
+          <div class="span-all">
+            <label>商品群ごとの配分(%)</label>
+            <div class="submit-alloc-layout">
+              <div class="alloc-grid">
+                <label>株（国内）<input id="fbAllocStockDomestic" type="number" min="0" max="100" value="8" /></label>
+                <label>株（海外）<input id="fbAllocStockForeign" type="number" min="0" max="100" value="18" /></label>
+                <label>投信（国内インデックス）<input id="fbAllocFundDomIndex" type="number" min="0" max="100" value="10" /></label>
+                <label>投信（海外インデックス）<input id="fbAllocFundForIndex" type="number" min="0" max="100" value="32" /></label>
+                <label>投信（国内アクティブ）<input id="fbAllocFundDomActive" type="number" min="0" max="100" value="5" /></label>
+                <label>投信（海外アクティブ）<input id="fbAllocFundForActive" type="number" min="0" max="100" value="6" /></label>
+                <label>不動産（REIT）<input id="fbAllocReit" type="number" min="0" max="100" value="4" /></label>
+                <label>債券（国内）<input id="fbAllocBondDomestic" type="number" min="0" max="100" value="8" /></label>
+                <label>債券（海外）<input id="fbAllocBondForeign" type="number" min="0" max="100" value="4" /></label>
+                <label>FX<input id="fbAllocFx" type="number" min="0" max="100" value="2" /></label>
+                <label>金<input id="fbAllocGold" type="number" min="0" max="100" value="2" /></label>
+                <label>その他<input id="fbAllocOther" type="number" min="0" max="100" value="1" /></label>
+              </div>
+              <div class="submit-pie-preview">
+                <div id="fbSubmitPieChart" class="pie-chart"></div>
+                <div id="fbSubmitPieLegend" class="pie-legend"></div>
+              </div>
+            </div>
+            <p id="fbAllocTotal" class="alloc-total">配分合計: 100%</p>
+          </div>
+        </div>
+        <div class="submit-note-wide">
+          <label>自由記述
+            <textarea id="fbSubmitNote" rows="5" maxlength="200">価格急変時に買い増しせず、定額積立を維持。</textarea>
+          </label>
+        </div>
+        <button id="fbSubmitBtn" class="primary" type="button">投稿する（即時公開）</button>
+        <p id="fbSubmitStatus" class="note"></p>
+      </div>
+      <div class="footer-note">審査なし運用のため、投稿は公開状態で反映し、必要時のみ管理者が非公開化。</div>
+    </section>
+  </div>
+
+  <script>
+    const publishedKey = "nisaPublishedPosts";
+    const hiddenKey = "nisaHiddenPostIds";
+    const ngWords = [
+      "バカ", "アホ", "死ね", "最悪", "ゴミ", "詐欺", "絶対儲かる",
+      "必ず儲かる", "今すぐ登録", "dmください", "line追加", "案件"
+    ];
+    const fbResults = document.getElementById("fbResults");
+    const fbSearchBtn = document.getElementById("fbSearchBtn");
+    const fbSearchStatus = document.getElementById("fbSearchStatus");
+    const fbSubmitBtn = document.getElementById("fbSubmitBtn");
+    const fbSubmitStatus = document.getElementById("fbSubmitStatus");
+    const fbAllocTotal = document.getElementById("fbAllocTotal");
+    const fbSubmitPieChart = document.getElementById("fbSubmitPieChart");
+    const fbSubmitPieLegend = document.getElementById("fbSubmitPieLegend");
+
+    const fbSearch = {
+      age: document.getElementById("fbSearchAge"),
+      occupation: document.getElementById("fbSearchOccupation"),
+      income: document.getElementById("fbSearchIncome"),
+      experience: document.getElementById("fbSearchExperience"),
+      nisa: document.getElementById("fbSearchNisa"),
+      risk: document.getElementById("fbSearchRisk"),
+      policy: document.getElementById("fbSearchPolicy"),
+      ratio: document.getElementById("fbSearchRatio")
+    };
+
+    const fbSubmit = {
+      displayName: document.getElementById("fbDisplayName"),
+      age: document.getElementById("fbSubmitAge"),
+      occupation: document.getElementById("fbSubmitOccupation"),
+      income: document.getElementById("fbSubmitIncome"),
+      experience: document.getElementById("fbSubmitExperience"),
+      nisa: document.getElementById("fbSubmitNisa"),
+      risk: document.getElementById("fbSubmitRisk"),
+      policy: document.getElementById("fbSubmitPolicy"),
+      family: document.getElementById("fbSubmitFamily"),
+      housing: document.getElementById("fbSubmitHousing"),
+      ratio: document.getElementById("fbSubmitRatio"),
+      perf1y: document.getElementById("fbSubmitPerf1y"),
+      perfSince: document.getElementById("fbSubmitPerfSince"),
+      note: document.getElementById("fbSubmitNote"),
+      allocStockDomestic: document.getElementById("fbAllocStockDomestic"),
+      allocStockForeign: document.getElementById("fbAllocStockForeign"),
+      allocFundDomIndex: document.getElementById("fbAllocFundDomIndex"),
+      allocFundForIndex: document.getElementById("fbAllocFundForIndex"),
+      allocFundDomActive: document.getElementById("fbAllocFundDomActive"),
+      allocFundForActive: document.getElementById("fbAllocFundForActive"),
+      allocReit: document.getElementById("fbAllocReit"),
+      allocBondDomestic: document.getElementById("fbAllocBondDomestic"),
+      allocBondForeign: document.getElementById("fbAllocBondForeign"),
+      allocFx: document.getElementById("fbAllocFx"),
+      allocGold: document.getElementById("fbAllocGold"),
+      allocOther: document.getElementById("fbAllocOther")
+    };
+
+    const allocationMeta = [
+      { key: "alloc_stock_domestic", inputKey: "allocStockDomestic", label: "株（国内）", color: "#1b74e4" },
+      { key: "alloc_stock_foreign", inputKey: "allocStockForeign", label: "株（海外）", color: "#39a0ed" },
+      { key: "alloc_fund_dom_index", inputKey: "allocFundDomIndex", label: "投信（国内インデックス）", color: "#7cc6fe" },
+      { key: "alloc_fund_for_index", inputKey: "allocFundForIndex", label: "投信（海外インデックス）", color: "#84dcc6" },
+      { key: "alloc_fund_dom_active", inputKey: "allocFundDomActive", label: "投信（国内アクティブ）", color: "#f6bd60" },
+      { key: "alloc_fund_for_active", inputKey: "allocFundForActive", label: "投信（海外アクティブ）", color: "#ffd166" },
+      { key: "alloc_reit", inputKey: "allocReit", label: "不動産（REIT）", color: "#06d6a0" },
+      { key: "alloc_bond_domestic", inputKey: "allocBondDomestic", label: "債券（国内）", color: "#a37acc" },
+      { key: "alloc_bond_foreign", inputKey: "allocBondForeign", label: "債券（海外）", color: "#9b5de5" },
+      { key: "alloc_fx", inputKey: "allocFx", label: "FX", color: "#ef476f" },
+      { key: "alloc_gold", inputKey: "allocGold", label: "金", color: "#ff9f1c" },
+      { key: "alloc_other", inputKey: "allocOther", label: "その他", color: "#adb5bd" }
+    ];
+
+    const getStore = (key) => JSON.parse(localStorage.getItem(key) || "[]");
+    const setStore = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+    const esc = (v) => String(v)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll("\"", "&quot;")
+      .replaceAll("'", "&#039;");
+
+    const getRatioParts = (ratioText) => {
+      const parts = ratioText.split("/").map((v) => Number(v.trim()));
+      return { invest: parts[0] || 0, cash: parts[1] || 0 };
+    };
+
+    const calcMatchScore = (post) => {
+      let score = 0;
+      if (post.age === fbSearch.age.value) score += 1;
+      if (post.occupation === fbSearch.occupation.value) score += 1;
+      if (post.income === fbSearch.income.value) score += 1;
+      if (post.experience === fbSearch.experience.value) score += 1;
+      if (post.nisa === fbSearch.nisa.value) score += 1;
+      if (post.risk === fbSearch.risk.value) score += 1;
+      if (post.policy === fbSearch.policy.value) score += 1;
+      const ratio = `${Number(post.invest_ratio || 0)} / ${Number(post.cash_ratio || 0)}`;
+      if (ratio === fbSearch.ratio.value) score += 1;
+      return score;
+    };
+
+    const getAllocationsFromInputs = () => {
+      return allocationMeta.reduce((acc, item) => {
+        acc[item.key] = Number(fbSubmit[item.inputKey].value || 0);
+        return acc;
+      }, {});
+    };
+
+    const sumAllocations = (allocations) => {
+      return allocationMeta.reduce((sum, item) => sum + Number(allocations[item.key] || 0), 0);
+    };
+
+    const getTopAllocations = (post, limit = 3) => {
+      return allocationMeta
+        .map((item) => ({ ...item, value: Number(post[item.key] || 0) }))
+        .filter((item) => item.value > 0)
+        .sort((a, b) => b.value - a.value)
+        .slice(0, limit);
+    };
+
+    const getDominantLabel = (post) => {
+      const top = getTopAllocations(post, 1)[0];
+      return top ? top.label : "商品群未設定";
+    };
+
+    const getPieGradient = (post) => {
+      let deg = 0;
+      const ranges = [];
+      allocationMeta.forEach((item) => {
+        const value = Number(post[item.key] || 0);
+        if (value <= 0) return;
+        const next = deg + (value * 3.6);
+        ranges.push(`${item.color} ${deg}deg ${next}deg`);
+        deg = next;
+      });
+      return ranges.length ? `conic-gradient(${ranges.join(", ")})` : "conic-gradient(#e6edf9 0deg 360deg)";
+    };
+
+    const createPieHtml = (post) => {
+      const topText = getTopAllocations(post)
+        .map((item) => `${item.label}${item.value}%`)
+        .join(" / ");
+      return `
+        <div class="pie-wrap">
+          <div class="pie-chart" style="background:${getPieGradient(post)}"></div>
+          <div class="pie-legend">${esc(topText || "配分なし")}</div>
+        </div>
+      `;
+    };
+
+    const createCard = (post, score) => {
+      return `
+        <article class="post-card" data-dynamic="1">
+          <div class="post-head"><span>${esc(post.age)} / ${esc(post.occupation)}</span><span class="score">一致スコア: ${score} / 8</span></div>
+          <h3 class="post-title">${esc(getDominantLabel(post))}中心の運用</h3>
+          ${createPieHtml(post)}
+          <p class="metric">過去1年: <strong>${Number(post.perf_1y) >= 0 ? "+" : ""}${Number(post.perf_1y).toFixed(1)}%</strong> / 開始来: <strong>${Number(post.perf_since) >= 0 ? "+" : ""}${Number(post.perf_since).toFixed(1)}%</strong></p>
+          <div class="tags"><span>${esc(post.nisa)}</span><span>${esc(post.policy)}</span><span>投資${Number(post.invest_ratio)} / 現金${Number(post.cash_ratio)}</span></div>
+          <div class="react"><button>参考になった</button><button>共感した</button><button>真似したい</button><a class="btn" href="nisa_post_detail.html?id=${encodeURIComponent(post.id)}">詳細を見る</a></div>
+        </article>
+      `;
+    };
+
+    const renderDynamicPosts = (sortByScore) => {
+      const hiddenIds = new Set(getStore(hiddenKey));
+      const published = getStore(publishedKey).filter((p) => !hiddenIds.has(String(p.id)));
+      const withScore = published.map((post) => ({ post, score: calcMatchScore(post) }));
+      if (sortByScore) {
+        withScore.sort((a, b) => b.score - a.score || Date.parse(b.post.created_at || "") - Date.parse(a.post.created_at || ""));
+      } else {
+        withScore.sort((a, b) => Date.parse(b.post.created_at || "") - Date.parse(a.post.created_at || ""));
+      }
+      fbResults.querySelectorAll("article[data-dynamic='1']").forEach((el) => el.remove());
+      const html = withScore.map((item) => createCard(item.post, item.score)).join("");
+      fbResults.insertAdjacentHTML("afterbegin", html);
+      return withScore;
+    };
+
+    const validatePost = () => {
+      const name = fbSubmit.displayName.value.trim();
+      const note = fbSubmit.note.value.trim();
+      const perf1y = Number(fbSubmit.perf1y.value);
+      const perfSince = Number(fbSubmit.perfSince.value);
+      const allocations = getAllocationsFromInputs();
+      const allocTotal = sumAllocations(allocations);
+      if (!name) return "表示名を入力してください。";
+      if (!note) return "自由記述を入力してください。";
+      if (note.length > 200) return "自由記述は200字以内で入力してください。";
+      if (Number.isNaN(perf1y) || perf1y < -1000 || perf1y > 1000) return "過去1年(%)は -1000 〜 1000 で入力してください。";
+      if (Number.isNaN(perfSince) || perfSince < -1000 || perfSince > 1000) return "開始来(%)は -1000 〜 1000 で入力してください。";
+      if (allocTotal !== 100) return `商品群の配分合計を100%にしてください（現在: ${allocTotal}%）`;
+      if (/(https?:\/\/|www\.|[a-z0-9-]+\.(com|net|jp|org))/i.test(note)) return "外部リンクは禁止です。";
+      const hit = ngWords.find((word) => note.toLowerCase().includes(word.toLowerCase()));
+      if (hit) return `NGワードを検知しました: ${hit}`;
+      return "";
+    };
+
+    const submitPost = () => {
+      const error = validatePost();
+      if (error) {
+        fbSubmitStatus.textContent = error;
+        return;
+      }
+      const ratio = getRatioParts(fbSubmit.ratio.value);
+      const allocations = getAllocationsFromInputs();
+      const post = {
+        id: `P-${Date.now()}`,
+        display_name: fbSubmit.displayName.value.trim(),
+        age: fbSubmit.age.value,
+        family: fbSubmit.family.value,
+        housing: fbSubmit.housing.value,
+        occupation: fbSubmit.occupation.value,
+        income: fbSubmit.income.value,
+        experience: fbSubmit.experience.value,
+        nisa: fbSubmit.nisa.value,
+        risk: fbSubmit.risk.value,
+        policy: fbSubmit.policy.value,
+        main_product: getDominantLabel(allocations),
+        sub_product: "",
+        invest_ratio: ratio.invest,
+        cash_ratio: ratio.cash,
+        alloc_stock_domestic: allocations.alloc_stock_domestic,
+        alloc_stock_foreign: allocations.alloc_stock_foreign,
+        alloc_fund_dom_index: allocations.alloc_fund_dom_index,
+        alloc_fund_for_index: allocations.alloc_fund_for_index,
+        alloc_fund_dom_active: allocations.alloc_fund_dom_active,
+        alloc_fund_for_active: allocations.alloc_fund_for_active,
+        alloc_reit: allocations.alloc_reit,
+        alloc_bond_domestic: allocations.alloc_bond_domestic,
+        alloc_bond_foreign: allocations.alloc_bond_foreign,
+        alloc_fx: allocations.alloc_fx,
+        alloc_gold: allocations.alloc_gold,
+        alloc_other: allocations.alloc_other,
+        perf_1y: Number(fbSubmit.perf1y.value),
+        perf_since: Number(fbSubmit.perfSince.value),
+        note: fbSubmit.note.value.trim(),
+        status: "published",
+        created_at: new Date().toISOString()
+      };
+      const published = getStore(publishedKey);
+      published.unshift(post);
+      setStore(publishedKey, published);
+      renderDynamicPosts(false);
+      fbSubmitStatus.textContent = `投稿を公開しました（${post.id}）。`;
+    };
+
+    const refreshAllocTotal = () => {
+      const allocations = getAllocationsFromInputs();
+      const total = sumAllocations(allocations);
+      fbAllocTotal.textContent = `配分合計: ${total}%`;
+      fbAllocTotal.style.color = total === 100 ? "#0b846f" : "#dc4f4f";
+      fbSubmitPieChart.style.background = getPieGradient(allocations);
+      const topText = getTopAllocations(allocations)
+        .map((item) => `${item.label}${item.value}%`)
+        .join(" / ");
+      fbSubmitPieLegend.textContent = topText || "配分を入力すると上位3商品群を表示します";
+    };
+
+    allocationMeta.forEach((item) => {
+      fbSubmit[item.inputKey].addEventListener("input", refreshAllocTotal);
+    });
+
+    fbSearchBtn.addEventListener("click", () => {
+      const result = renderDynamicPosts(true);
+      const topScore = result.length ? result[0].score : 0;
+      fbSearchStatus.textContent = `近いケースを表示中: 最高一致 ${topScore} / 8（${result.length}件）`;
+    });
+    fbSubmitBtn.addEventListener("click", submitPost);
+    window.addEventListener("storage", (event) => {
+      if (event.key === publishedKey || event.key === hiddenKey) {
+        renderDynamicPosts(false);
+      }
+    });
+    refreshAllocTotal();
+    renderDynamicPosts(false);
+  </script>
+</body>
+</html>

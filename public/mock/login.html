@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NISA運用者 匿名投稿 | 新規登録</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #212838;
+      --muted: #58627a;
+      --line: #dce3f2;
+      --brand: #1674ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: radial-gradient(circle at top right, #eaf0ff 0%, #f5f7fb 40%, #f5f7fb 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 980px; margin: 0 auto; padding: 20px; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .brand { font-weight: 700; letter-spacing: .03em; }
+    .top-actions { display: flex; gap: 8px; }
+    .btn, button, input {
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: inherit;
+    }
+    .btn, button { padding: 10px 14px; cursor: pointer; transition: .2s; display: inline-flex; align-items: center; justify-content: center; }
+    .btn.primary, button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .btn.soft, button.soft { border-color: #b9d4ff; background: #edf4ff; color: #0e4fa2; }
+
+    .mock {
+      border: 1px solid #d7deeb;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .mock-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid #d7deeb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+    }
+    .mock-title { margin: 0; font-size: 18px; }
+    .mock-sub { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .brand-chip { color: #1b74e4; font-weight: 700; }
+
+    .hero {
+      border-bottom: 1px solid #d7deeb;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      background: #f3f6fb;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 25px; }
+    .hero p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .hero-card {
+      border: 1px solid #d7deeb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+      font-size: 13px;
+      color: #42506b;
+    }
+
+    .body {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .panel {
+      border: 1px solid #d7deeb;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06);
+    }
+    .panel h2 { margin: 0 0 10px; font-size: 16px; }
+    .panel .note { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+    .field { margin-bottom: 10px; }
+    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .field input { width: 100%; padding: 9px 10px; }
+    .method-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .method-switch label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: #f7faff;
+      color: #31415f;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .method-switch input { width: auto; margin: 0; }
+    .hidden { display: none; }
+    .actions { display: grid; gap: 8px; margin-top: 10px; }
+    .help {
+      margin-top: 4px;
+      border-top: 1px solid #e4e9f4;
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .status-note {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #0e4fa2;
+      min-height: 18px;
+    }
+    .footer-note {
+      border-top: 1px solid #d7deeb;
+      padding: 12px 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+      .body { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="top">
+      <div class="brand">NISA運用者 匿名投稿モック（認証画面）</div>
+      <div class="top-actions">
+        <a class="btn soft" href="index.html">トップに戻る</a>
+      </div>
+    </header>
+
+    <section class="mock">
+      <div class="mock-head">
+        <div>
+          <h2 class="mock-title"><span class="brand-chip">NISA Auth</span></h2>
+          <p class="mock-sub">利用者画面と同一トーンの新規登録/ログイン</p>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <h1>新規登録（メール / Google）+ 2段階認証</h1>
+          <p>投稿・リアクション・通報は2FA完了後に有効化されます。金融助言ではなく、自己申告データを扱う匿名コミュニティです。</p>
+        </div>
+        <div class="hero-card">
+          <strong>セキュリティ要件</strong>
+          <p>1段階: メール or Google</p>
+          <p>2段階: TOTP（6桁）</p>
+          <p>投稿・管理操作: aal2 必須</p>
+        </div>
+      </div>
+
+      <div class="body">
+        <section class="panel">
+          <h2>1段階目: アカウント登録</h2>
+          <p class="note">まずアカウントを作成します。</p>
+          <div class="method-switch">
+            <label><input type="radio" name="registerMethod" value="email" checked /> メール</label>
+            <label><input type="radio" name="registerMethod" value="google" /> Google</label>
+          </div>
+
+          <div id="emailFields">
+            <div class="field">
+              <label>メールアドレス</label>
+              <input type="email" placeholder="you@example.com" />
+            </div>
+            <div class="field">
+              <label>パスワード</label>
+              <input type="password" placeholder="8文字以上" />
+            </div>
+            <div class="field">
+              <label>パスワード確認</label>
+              <input type="password" placeholder="再入力してください" />
+            </div>
+          </div>
+
+          <div id="googleFields" class="hidden field">
+            <label>Googleアカウント</label>
+            <input type="email" placeholder="google-account@example.com" />
+          </div>
+
+          <div class="actions">
+            <button id="emailRegisterBtn" class="primary" type="button">メールで新規登録</button>
+            <button id="googleRegisterBtn" class="soft hidden" type="button">Googleで新規登録</button>
+          </div>
+          <p id="registerStatus" class="status-note"></p>
+          <div class="help">
+            登録済みの場合はログインへ切り替えてください。
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>2段階目: TOTP設定/確認</h2>
+          <p class="note">初回はQRを読み取り、6桁コードで確認します。</p>
+          <div class="field">
+            <label>認証コード（6桁）</label>
+            <input type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
+          </div>
+          <div class="actions">
+            <button class="primary" type="button">コードを確認</button>
+            <button class="soft" type="button">再送 / 再設定</button>
+          </div>
+          <div class="help">
+            Google Authenticator / 1Password / Authy などのTOTP対応アプリを利用してください。
+          </div>
+        </section>
+      </div>
+
+      <div class="footer-note">
+        本サービスは投資判断の助言を目的とするものではありません。投稿内容は利用者の自己申告です。
+      </div>
+    </section>
+  </div>
+  <script>
+    const methodRadios = document.querySelectorAll('input[name="registerMethod"]');
+    const emailFields = document.getElementById("emailFields");
+    const googleFields = document.getElementById("googleFields");
+    const emailBtn = document.getElementById("emailRegisterBtn");
+    const googleBtn = document.getElementById("googleRegisterBtn");
+    const registerStatus = document.getElementById("registerStatus");
+
+    function syncMethod(method) {
+      const isEmail = method === "email";
+      emailFields.classList.toggle("hidden", !isEmail);
+      googleFields.classList.toggle("hidden", isEmail);
+      emailBtn.classList.toggle("hidden", !isEmail);
+      googleBtn.classList.toggle("hidden", isEmail);
+    }
+
+    methodRadios.forEach((radio) => {
+      radio.addEventListener("change", (e) => {
+        syncMethod(e.target.value);
+        registerStatus.textContent = "";
+      });
+    });
+
+    emailBtn.addEventListener("click", () => {
+      registerStatus.textContent = "受付中です。確認メールの送信をお待ちください。";
+    });
+
+    syncMethod("email");
+  </script>
+</body>
+</html>

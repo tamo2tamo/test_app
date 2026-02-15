@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NISA運用者 匿名投稿 | トップ</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #212838;
+      --muted: #58627a;
+      --line: #dce3f2;
+      --brand: #1674ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: radial-gradient(circle at top right, #eaf0ff 0%, #f5f7fb 40%, #f5f7fb 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 20px; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .brand { font-weight: 700; letter-spacing: 0.03em; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .btn {
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: inherit;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .btn.soft { border-color: #b9d4ff; background: #edf4ff; color: #0e4fa2; }
+
+    .mock {
+      border: 1px solid #d7deeb;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .mock-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid #d7deeb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+    }
+    .mock-title { margin: 0; font-size: 18px; }
+    .mock-sub { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .brand-chip { color: #1b74e4; font-weight: 700; }
+
+    .hero {
+      border-bottom: 1px solid #d7deeb;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      background: #f3f6fb;
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 28px; }
+    .hero p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .hero-card {
+      border: 1px solid #d7deeb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chips span {
+      border: 1px solid #d7deeb;
+      border-radius: 100px;
+      padding: 4px 10px;
+      background: #fff;
+      font-size: 12px;
+      color: #4b5770;
+    }
+
+    .body {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .card {
+      border: 1px solid #d7deeb;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06);
+    }
+    .kpi-label { margin: 0; color: var(--muted); font-size: 12px; }
+    .kpi-value { margin: 4px 0; font-size: 26px; font-weight: 700; color: #1a3e6f; }
+    .kpi-sub { margin: 0; color: #5c6f90; font-size: 12px; }
+
+    .footer-note {
+      border-top: 1px solid #d7deeb;
+      padding: 12px 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="top">
+      <div class="brand">NISA運用者 匿名投稿モック（トップ画面）</div>
+      <div class="top-actions">
+        <a class="btn soft" href="login.html">新規登録</a>
+        <a class="btn primary" href="nisa_user_mock.html">利用者画面へ</a>
+      </div>
+    </header>
+
+    <section class="mock">
+      <div class="mock-head">
+        <div>
+          <h1 class="mock-title"><span class="brand-chip">NISA Top</span></h1>
+          <p class="mock-sub">利用者画面と同一トーンで設計したトップページ</p>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <h1>属性 x 配分 x 成績で、自分に近い運用者を見つける</h1>
+          <p>匿名投稿を検索して、近いケースを比較できます。コメント/DMなし、前向きリアクションと通報導線で健全性を保ちます。</p>
+          <div class="chips">
+            <span>匿名投稿</span><span>一致スコア検索</span><span>前向きリアクション</span><span>通報導線</span><span>2段階認証</span>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <strong>はじめ方</strong>
+          <p>1. 新規登録</p>
+          <p>2. 2段階認証を設定</p>
+          <p>3. 検索または投稿を開始</p>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <a class="btn soft" href="login.html">新規登録する</a>
+            <a class="btn primary" href="nisa_user_mock.html">検索をはじめる</a>
+          </div>
+        </aside>
+      </div>
+
+      <div class="body">
+        <div class="kpi-grid">
+          <article class="card">
+            <p class="kpi-label">公開投稿</p>
+            <p class="kpi-value">1,208</p>
+            <p class="kpi-sub">先週 +84</p>
+          </article>
+          <article class="card">
+            <p class="kpi-label">平均リアクション</p>
+            <p class="kpi-value">6.4</p>
+            <p class="kpi-sub">前向きのみ</p>
+          </article>
+          <article class="card">
+            <p class="kpi-label">承認率</p>
+            <p class="kpi-value">78%</p>
+            <p class="kpi-sub">審査運用中</p>
+          </article>
+          <article class="card">
+            <p class="kpi-label">通報率</p>
+            <p class="kpi-value">0.8%</p>
+            <p class="kpi-sub">低水準を維持</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        本サービスは投資判断の助言を目的とするものではありません。投稿内容は利用者の自己申告です。
+      </div>
+    </section>
+  </div>
+</body>
+</html>
