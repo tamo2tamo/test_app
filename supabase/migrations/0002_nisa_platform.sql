@@ -1,10 +1,97 @@
 create extension if not exists pgcrypto;
 
-create type public.post_status as enum ('draft', 'pending', 'published', 'hidden', 'rejected');
-create type public.reaction_type as enum ('helpful', 'clear', 'support');
-create type public.report_reason as enum ('abuse', 'ad', 'scam', 'other');
-create type public.report_status as enum ('open', 'resolved');
-create type public.review_action as enum ('approve', 'reject', 'request_fix', 'hide', 'restore');
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'post_status') then
+    create type public.post_status as enum ('draft', 'pending', 'published', 'hidden', 'rejected');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'reaction_type') then
+    create type public.reaction_type as enum ('helpful', 'clear', 'support');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'report_reason') then
+    create type public.report_reason as enum ('abuse', 'ad', 'scam', 'other');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'report_status') then
+    create type public.report_status as enum ('open', 'resolved');
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'review_action') then
+    create type public.review_action as enum ('approve', 'reject', 'request_fix', 'hide', 'restore');
+  end if;
+end $$;
+
+do $$
+begin
+  execute 'drop policy if exists public_can_read_published_posts on public.posts';
+  execute 'drop policy if exists public_can_insert_queued_posts on public.posts';
+  execute 'drop policy if exists public_can_read_published_allocations on public.allocations';
+  execute 'drop policy if exists public_can_read_reactions_of_published on public.reactions';
+
+  if exists (select 1 from pg_type where typname = 'post_status') then
+    if not exists (
+      select 1
+      from pg_enum e
+      join pg_type t on t.oid = e.enumtypid
+      where t.typname = 'post_status'
+        and e.enumlabel = 'pending'
+    ) then
+      if exists (
+        select 1 from information_schema.tables
+        where table_schema = 'public' and table_name = 'posts'
+      ) then
+        create type public.post_status_new as enum ('draft', 'pending', 'published', 'hidden', 'rejected');
+        alter table public.posts alter column status drop default;
+        alter table public.posts alter column status type public.post_status_new
+          using (
+            case status::text
+              when 'queued' then 'pending'
+              when 'published' then 'published'
+              when 'rejected' then 'rejected'
+              else 'draft'
+            end
+          )::public.post_status_new;
+        drop type public.post_status;
+        alter type public.post_status_new rename to post_status;
+      else
+        drop type public.post_status;
+        create type public.post_status as enum ('draft', 'pending', 'published', 'hidden', 'rejected');
+      end if;
+    end if;
+  else
+    create type public.post_status as enum ('draft', 'pending', 'published', 'hidden', 'rejected');
+  end if;
+end $$;
+
+do $$
+begin
+  begin
+    alter type public.reaction_type add value if not exists 'helpful';
+  exception when others then null;
+  end;
+  begin
+    alter type public.reaction_type add value if not exists 'clear';
+  exception when others then null;
+  end;
+  begin
+    alter type public.reaction_type add value if not exists 'support';
+  exception when others then null;
+  end;
+end $$;
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -41,6 +128,15 @@ create table if not exists public.posts (
   published_at timestamptz
 );
 
+alter table public.posts add column if not exists author_id uuid references auth.users(id) on delete cascade;
+alter table public.posts add column if not exists profile jsonb not null default '{}'::jsonb;
+alter table public.posts add column if not exists allocations jsonb not null default '{}'::jsonb;
+alter table public.posts add column if not exists performance jsonb not null default '{}'::jsonb;
+alter table public.posts add column if not exists moderation_note text;
+alter table public.posts add column if not exists view_count integer not null default 0;
+alter table public.posts add column if not exists report_penalty integer not null default 0;
+alter table public.posts add column if not exists updated_at timestamptz not null default now();
+
 create table if not exists public.reactions (
   id bigint generated always as identity primary key,
   post_id uuid not null references public.posts(id) on delete cascade,
@@ -49,6 +145,9 @@ create table if not exists public.reactions (
   created_at timestamptz not null default now(),
   unique (post_id, user_id, type)
 );
+
+alter table public.reactions add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table public.reactions add column if not exists type public.reaction_type;
 
 create table if not exists public.reports (
   id bigint generated always as identity primary key,
@@ -60,6 +159,14 @@ create table if not exists public.reports (
   created_at timestamptz not null default now(),
   resolved_at timestamptz
 );
+
+alter table public.reports add column if not exists reporter_id uuid references auth.users(id) on delete set null;
+alter table public.reports add column if not exists memo text not null default '';
+alter table public.reports add column if not exists status public.report_status not null default 'open';
+alter table public.reports add column if not exists resolved_at timestamptz;
+update public.reports
+set memo = coalesce(nullif(memo, ''), detail, '')
+where coalesce(memo, '') = '';
 
 create table if not exists public.admin_actions (
   id bigint generated always as identity primary key,
@@ -110,6 +217,7 @@ create table if not exists public.traffic_attributions (
 create index if not exists idx_posts_status_created on public.posts(status, created_at desc);
 create index if not exists idx_reports_status_created on public.reports(status, created_at desc);
 create index if not exists idx_traffic_date on public.traffic_attributions(tracked_date);
+create unique index if not exists idx_reactions_post_user_type on public.reactions(post_id, user_id, type) where user_id is not null and type is not null;
 
 create or replace function public.jwt_aal() returns text
 language sql
