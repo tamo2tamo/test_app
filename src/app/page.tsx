@@ -19,29 +19,28 @@ export default function HomePage() {
         <CardHeader className="pb-2">
           <CardTitle className="text-base">検索（人気順）</CardTitle>
         </CardHeader>
-        <CardContent>{controls}</CardContent>
-      </Card>
-      {results[0] && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">サンプル情報</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <div className="flex flex-wrap gap-2">
-                <Badge>{results[0].post.profile.age}代</Badge>
-                <Badge>{results[0].post.profile.occupation}</Badge>
-                <Badge>一致 {results[0].matchScore}</Badge>
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          <div>{controls}</div>
+          <div className="rounded-lg border border-border p-3">
+            <p className="mb-2 text-sm font-semibold">サンプル情報</p>
+            {results[0] ? (
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-2">
+                  <Badge>{results[0].post.profile.age}代</Badge>
+                  <Badge>{results[0].post.profile.occupation}</Badge>
+                  <Badge>一致 {results[0].matchScore}</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  利回り過去1年: {results[0].post.performance.oneYear}% / 利回り開始来: {results[0].post.performance.sinceStart}%
+                </p>
+                <AllocationPie allocations={results[0].post.allocations} pieClassName="h-72 w-72" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                利回り過去1年: {results[0].post.performance.oneYear}% / 利回り開始来: {results[0].post.performance.sinceStart}%
-              </p>
-              <p className="text-sm text-muted-foreground line-clamp-3">{results[0].post.memo}</p>
-            </div>
-            <AllocationPie allocations={results[0].post.allocations} pieClassName="h-80 w-80" />
-          </CardContent>
-        </Card>
-      )}
+            ) : (
+              <p className="text-sm text-muted-foreground">サンプル表示データがありません。</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="space-y-4">

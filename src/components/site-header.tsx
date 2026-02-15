@@ -10,9 +10,17 @@ export function SiteHeader() {
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">人気順で近いケースを探す</h1>
         <p className="mt-2 text-sm text-muted-foreground">金融助言ではありません。投稿は自己申告データです。</p>
       </div>
-      <Link href="/post/new">
-        <Button size="lg">投稿する</Button>
-      </Link>
+      <div className="flex flex-wrap items-center gap-2">
+        <Link href="/auth#login">
+          <Button variant="outline">ログイン</Button>
+        </Link>
+        <Link href="/auth#signup">
+          <Button className="bg-blue-600 text-white hover:bg-blue-700">新規登録</Button>
+        </Link>
+        <Link href="/post/new">
+          <Button size="lg">投稿する</Button>
+        </Link>
+      </div>
     </header>
   );
 }

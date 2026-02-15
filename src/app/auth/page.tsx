@@ -43,7 +43,7 @@ export default function AuthPage() {
         </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
+        <Card id="login">
           <CardHeader>
             <CardTitle>ログイン</CardTitle>
           </CardHeader>
@@ -60,7 +60,7 @@ export default function AuthPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card id="signup">
           <CardHeader>
             <CardTitle>新規登録</CardTitle>
           </CardHeader>
