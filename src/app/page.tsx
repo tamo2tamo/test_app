@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function HomePage() {
   const { loading, results, controls, skeleton } = useSearchResults();
+  const sampleResults = results.slice(0, 3);
 
   return (
     <main className="mx-auto max-w-6xl space-y-4 p-4 md:p-8">
@@ -22,18 +23,22 @@ export default function HomePage() {
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div>{controls}</div>
           <div className="rounded-lg border border-border p-3">
-            <p className="mb-2 text-sm font-semibold">サンプル情報</p>
-            {results[0] ? (
-              <div className="space-y-2">
-                <div className="flex flex-wrap gap-2">
-                  <Badge>{results[0].post.profile.age}代</Badge>
-                  <Badge>{results[0].post.profile.occupation}</Badge>
-                  <Badge>一致 {results[0].matchScore}</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  利回り過去1年: {results[0].post.performance.oneYear}% / 利回り開始来: {results[0].post.performance.sinceStart}%
-                </p>
-                <AllocationPie allocations={results[0].post.allocations} pieClassName="h-72 w-72" />
+            <p className="mb-2 text-sm font-semibold">サンプル事例（3件）</p>
+            {sampleResults.length > 0 ? (
+              <div className="space-y-3">
+                {sampleResults.map((sample) => (
+                  <div key={sample.post.id} className="rounded-md border border-border p-2">
+                    <div className="mb-2 flex flex-wrap gap-2">
+                      <Badge>{sample.post.profile.age}代</Badge>
+                      <Badge>{sample.post.profile.occupation}</Badge>
+                      <Badge>一致 {sample.matchScore}</Badge>
+                    </div>
+                    <p className="mb-2 text-xs text-muted-foreground">
+                      利回り過去1年: {sample.post.performance.oneYear}% / 利回り開始来: {sample.post.performance.sinceStart}%
+                    </p>
+                    <AllocationPie allocations={sample.post.allocations} pieClassName="h-48 w-48" />
+                  </div>
+                ))}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">サンプル表示データがありません。</p>
