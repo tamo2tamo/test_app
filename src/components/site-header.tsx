@@ -12,13 +12,13 @@ export function SiteHeader() {
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <Link href="/auth">
-          <Button variant="outline">ログイン</Button>
+          <Button className="h-10 bg-blue-600 px-4 text-white hover:bg-blue-700">ログイン</Button>
         </Link>
         <Link href="/auth/signup">
-          <Button className="bg-blue-600 text-white hover:bg-blue-700">新規登録</Button>
+          <Button className="h-10 bg-blue-600 px-4 text-white hover:bg-blue-700">新規登録</Button>
         </Link>
         <Link href="/post/new">
-          <Button size="lg">投稿する</Button>
+          <Button className="h-10 bg-blue-600 px-4 text-white hover:bg-blue-700">投稿する</Button>
         </Link>
       </div>
     </header>
