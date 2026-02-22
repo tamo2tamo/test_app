@@ -10,6 +10,15 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockPosts } from "@/lib/mock-data";
 
+const OCCUPATION_LABELS: Record<string, string> = {
+  employee: "会社員",
+  public_servant: "公務員",
+  self_employed: "自営業",
+  student: "学生",
+  unemployed: "無職",
+  other: "その他",
+};
+
 export default function HomePage() {
   const { loading, results, controls, skeleton } = useSearchResults();
   const sampleResults = results
@@ -38,7 +47,7 @@ export default function HomePage() {
                   <div key={sample.post.id} className="rounded-md border border-border p-2">
                     <div className="mb-2 flex flex-wrap gap-2">
                       <Badge>{sample.post.profile.age}代</Badge>
-                      <Badge>{sample.post.profile.occupation}</Badge>
+                      <Badge>{OCCUPATION_LABELS[sample.post.profile.occupation] ?? sample.post.profile.occupation}</Badge>
                       <Badge>一致 {sample.matchScore}</Badge>
                     </div>
                     <p className="mb-2 text-xs text-muted-foreground">

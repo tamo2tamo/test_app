@@ -4,6 +4,20 @@ import { cn } from "@/lib/utils";
 import { AllocationMap } from "@/lib/types";
 
 const COLORS = ["#114b5f", "#1a936f", "#88d498", "#f3e9d2", "#f4a259", "#ef5b5b", "#3f72af", "#8e9aaf", "#f28482", "#84a59d", "#f6bd60", "#9a8c98"];
+const ALLOCATION_LABELS: Record<string, string> = {
+  stock_jp: "株（国内）",
+  stock_global: "株（海外）",
+  fund_jp_index: "投信（国内インデックス）",
+  fund_global_index: "投信（海外インデックス）",
+  fund_jp_active: "投信（国内アクティブ）",
+  fund_global_active: "投信（海外アクティブ）",
+  reit: "不動産（REIT）",
+  bond_jp: "債券（国内）",
+  bond_global: "債券（海外）",
+  fx: "FX",
+  gold: "金",
+  other: "その他",
+};
 
 export function AllocationPie({ allocations, pieClassName }: { allocations: AllocationMap; pieClassName?: string }) {
   const entries = Object.entries(allocations)
@@ -32,7 +46,7 @@ export function AllocationPie({ allocations, pieClassName }: { allocations: Allo
           <div className="grid flex-1 grid-cols-2 gap-2 text-xs">
             {entries.map(([key, value], index) => (
               <Badge key={key} className="justify-between gap-2">
-                <span>{key}</span>
+                <span>{ALLOCATION_LABELS[key] ?? key}</span>
                 <span style={{ color: COLORS[index % COLORS.length] }}>{value}%</span>
               </Badge>
             ))}
