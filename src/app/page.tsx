@@ -8,27 +8,83 @@ import { useSearchResults } from "@/components/search-hook";
 import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockPosts } from "@/lib/mock-data";
+import { AllocationMap } from "@/lib/types";
 
-const OCCUPATION_LABELS: Record<string, string> = {
-  employee: "会社員",
-  public_servant: "公務員",
-  self_employed: "自営業",
-  student: "学生",
-  unemployed: "無職",
-  other: "その他",
-};
+const FIXED_SAMPLE_CASES: Array<{
+  id: string;
+  title: string;
+  tags: string[];
+  oneYear: number;
+  sinceStart: number;
+  allocations: AllocationMap;
+}> = [
+  {
+    id: "sample-domestic",
+    title: "国内中心",
+    tags: ["30代", "会社員", "安定志向"],
+    oneYear: 7.8,
+    sinceStart: 24.1,
+    allocations: {
+      stock_jp: 28,
+      stock_global: 7,
+      fund_jp_index: 18,
+      fund_global_index: 12,
+      fund_jp_active: 10,
+      fund_global_active: 3,
+      reit: 8,
+      bond_jp: 8,
+      bond_global: 2,
+      fx: 1,
+      gold: 2,
+      other: 1,
+    },
+  },
+  {
+    id: "sample-global",
+    title: "海外中心",
+    tags: ["40代", "会社員", "成長重視"],
+    oneYear: 12.9,
+    sinceStart: 38.6,
+    allocations: {
+      stock_jp: 5,
+      stock_global: 30,
+      fund_jp_index: 5,
+      fund_global_index: 30,
+      fund_jp_active: 2,
+      fund_global_active: 14,
+      reit: 4,
+      bond_jp: 3,
+      bond_global: 4,
+      fx: 1,
+      gold: 1,
+      other: 1,
+    },
+  },
+  {
+    id: "sample-balance",
+    title: "国内と海外のバランス",
+    tags: ["50代", "公務員", "バランス型"],
+    oneYear: 9.4,
+    sinceStart: 27.3,
+    allocations: {
+      stock_jp: 15,
+      stock_global: 15,
+      fund_jp_index: 14,
+      fund_global_index: 14,
+      fund_jp_active: 6,
+      fund_global_active: 6,
+      reit: 8,
+      bond_jp: 8,
+      bond_global: 8,
+      fx: 2,
+      gold: 2,
+      other: 2,
+    },
+  },
+];
 
 export default function HomePage() {
   const { loading, results, controls, skeleton } = useSearchResults();
-  const sampleResults = results
-    .filter((r) => Object.values(r.post.allocations ?? {}).some((v) => Number(String(v).replace("%", "")) > 0))
-    .slice(0, 3);
-  const fallbackSamples = mockPosts.slice(0, Math.max(0, 3 - sampleResults.length)).map((post) => ({
-    post,
-    matchScore: 82,
-  }));
-  const sampleCards = [...sampleResults.map((r) => ({ post: r.post, matchScore: r.matchScore })), ...fallbackSamples].slice(0, 3);
 
   return (
     <main className="mx-auto max-w-6xl space-y-4 p-4 md:p-8">
@@ -41,25 +97,20 @@ export default function HomePage() {
           <div>{controls}</div>
           <div className="rounded-lg border border-border p-3">
             <p className="mb-2 text-sm font-semibold">サンプル事例（3件）</p>
-            {sampleCards.length > 0 ? (
-              <div className="space-y-3">
-                {sampleCards.map((sample) => (
-                  <div key={sample.post.id} className="rounded-md border border-border p-2">
-                    <div className="mb-2 flex flex-wrap gap-2">
-                      <Badge>{sample.post.profile.age}代</Badge>
-                      <Badge>{OCCUPATION_LABELS[sample.post.profile.occupation] ?? sample.post.profile.occupation}</Badge>
-                      <Badge>一致 {sample.matchScore}</Badge>
-                    </div>
-                    <p className="mb-2 text-xs text-muted-foreground">
-                      利回り過去1年: {sample.post.performance.oneYear}% / 利回り開始来: {sample.post.performance.sinceStart}%
-                    </p>
-                    <AllocationPie allocations={sample.post.allocations} pieClassName="h-48 w-48" />
+            <div className="space-y-3">
+              {FIXED_SAMPLE_CASES.map((sample) => (
+                <div key={sample.id} className="rounded-md border border-border p-2">
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    <Badge>{sample.title}</Badge>
+                    {sample.tags.map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">サンプル表示データがありません。</p>
-            )}
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    利回り過去1年: {sample.oneYear}% / 利回り開始来: {sample.sinceStart}%
+                  </p>
+                  <AllocationPie allocations={sample.allocations} pieClassName="h-48 w-48" />
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -25,7 +25,8 @@ export function AllocationPie({ allocations, pieClassName }: { allocations: Allo
       const numeric = Number(String(value).replace("%", ""));
       return [key, Number.isFinite(numeric) ? numeric : 0] as const;
     })
-    .filter(([, value]) => value > 0);
+    .filter(([, value]) => value > 0)
+    .sort((a, b) => b[1] - a[1]);
   let angle = 0;
   const stops: string[] = [];
   entries.forEach(([, value], index) => {
