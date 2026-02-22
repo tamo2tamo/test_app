@@ -11,10 +11,10 @@ export function SiteHeader() {
         <p className="mt-2 text-sm text-muted-foreground">金融助言ではありません。投稿は自己申告データです。</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <Link href="/auth#login">
+        <Link href="/auth">
           <Button variant="outline">ログイン</Button>
         </Link>
-        <Link href="/auth#signup">
+        <Link href="/auth/signup">
           <Button className="bg-blue-600 text-white hover:bg-blue-700">新規登録</Button>
         </Link>
         <Link href="/post/new">
