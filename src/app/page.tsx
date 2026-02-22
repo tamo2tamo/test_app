@@ -8,10 +8,18 @@ import { useSearchResults } from "@/components/search-hook";
 import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { mockPosts } from "@/lib/mock-data";
 
 export default function HomePage() {
   const { loading, results, controls, skeleton } = useSearchResults();
-  const sampleResults = results.slice(0, 3);
+  const sampleResults = results
+    .filter((r) => Object.values(r.post.allocations ?? {}).some((v) => Number(String(v).replace("%", "")) > 0))
+    .slice(0, 3);
+  const fallbackSamples = mockPosts.slice(0, Math.max(0, 3 - sampleResults.length)).map((post) => ({
+    post,
+    matchScore: 82,
+  }));
+  const sampleCards = [...sampleResults.map((r) => ({ post: r.post, matchScore: r.matchScore })), ...fallbackSamples].slice(0, 3);
 
   return (
     <main className="mx-auto max-w-6xl space-y-4 p-4 md:p-8">
@@ -24,9 +32,9 @@ export default function HomePage() {
           <div>{controls}</div>
           <div className="rounded-lg border border-border p-3">
             <p className="mb-2 text-sm font-semibold">サンプル事例（3件）</p>
-            {sampleResults.length > 0 ? (
+            {sampleCards.length > 0 ? (
               <div className="space-y-3">
-                {sampleResults.map((sample) => (
+                {sampleCards.map((sample) => (
                   <div key={sample.post.id} className="rounded-md border border-border p-2">
                     <div className="mb-2 flex flex-wrap gap-2">
                       <Badge>{sample.post.profile.age}代</Badge>
