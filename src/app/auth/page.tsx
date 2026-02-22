@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAppState } from "@/lib/app-state";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { pushToast } from "@/lib/toast";
 
 export default function AuthPage() {
   const { auth, loginWithEmail, signupWithEmail, loginWithGoogle, logout } = useAppState();
+  const supabase = createSupabaseBrowserClient();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupMode, setSignupMode] = useState<"email" | "google">("email");
@@ -35,6 +38,25 @@ export default function AuthPage() {
     }
   }
 
+  async function onIssuePassword() {
+    if (!loginEmail) {
+      pushToast("ログイン用メールアドレスを入力してください", "error");
+      return;
+    }
+    if (!supabase) {
+      pushToast("Supabase設定が不足しています", "error");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(loginEmail, {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+    if (error) {
+      pushToast(error.message, "error");
+      return;
+    }
+    pushToast("パスワード再設定メールを送信しました", "success");
+  }
+
   return (
     <main className="mx-auto max-w-4xl p-6">
       <div className="mb-4 flex justify-end">
@@ -56,6 +78,7 @@ export default function AuthPage() {
               </Button>
             </div>
             <Button className="w-full" onClick={() => loginWithEmail(loginEmail, loginPassword)}>ログイン</Button>
+            <Button className="w-full" variant="outline" onClick={() => void onIssuePassword()}>パスワードを発行</Button>
             <Button className="w-full" variant="outline" onClick={() => loginWithGoogle()}>Googleでログイン</Button>
           </CardContent>
         </Card>
