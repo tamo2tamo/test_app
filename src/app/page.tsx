@@ -102,7 +102,7 @@ export default function HomePage() {
                 <div key={sample.id} className="rounded-md border border-border p-2">
                   <div className="mb-2 flex flex-wrap gap-2">
                     <Badge>{sample.title}</Badge>
-                    {sample.tags.map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                    {sample.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)}
                   </div>
                   <p className="mb-2 text-xs text-muted-foreground">
                     利回り過去1年: {sample.oneYear}% / 利回り開始来: {sample.sinceStart}%
