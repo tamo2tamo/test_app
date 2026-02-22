@@ -22,14 +22,26 @@ export default function AuthPage() {
   const [mfaChallengeId, setMfaChallengeId] = useState("");
   const [mfaQrCode, setMfaQrCode] = useState("");
   const [mfaCode, setMfaCode] = useState("");
+  const [status, setStatus] = useState<{ type: "success" | "error" | "info"; message: string } | null>(null);
+
+  async function onLogin() {
+    const ok = await loginWithEmail(loginEmail, loginPassword);
+    if (ok) {
+      setStatus({ type: "success", message: "ログインしました。" });
+    } else {
+      setStatus({ type: "error", message: "ログインに失敗しました。メールアドレスまたはパスワードを確認してください。" });
+    }
+  }
 
   async function onIssuePassword() {
     if (!loginEmail) {
       pushToast("ログイン用メールアドレスを入力してください", "error");
+      setStatus({ type: "error", message: "ログイン用メールアドレスを入力してください。" });
       return;
     }
     if (!supabase) {
       pushToast("Supabase設定が不足しています", "error");
+      setStatus({ type: "error", message: "Supabase設定が不足しています。" });
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(loginEmail, {
@@ -37,14 +49,17 @@ export default function AuthPage() {
     });
     if (error) {
       pushToast(error.message, "error");
+      setStatus({ type: "error", message: `パスワード発行に失敗しました: ${error.message}` });
       return;
     }
     pushToast("パスワード再設定メールを送信しました", "success");
+    setStatus({ type: "success", message: "パスワード再設定メールを送信しました。" });
   }
 
   async function onStartTotpSetup() {
     if (!supabase) {
       pushToast("Supabase設定が不足しています", "error");
+      setStatus({ type: "error", message: "Supabase設定が不足しています。" });
       return;
     }
 
@@ -71,8 +86,10 @@ export default function AuthPage() {
       setMfaChallengeId(challengeData.id);
       setMfaQrCode(qrCode);
       pushToast("認証アプリでQRコードを読み取り、6桁コードを入力してください", "info");
+      setStatus({ type: "info", message: "QRコードを読み取り、6桁コードを入力してください。" });
     } catch (e) {
       pushToast(e instanceof Error ? e.message : "2段階認証の開始に失敗しました", "error");
+      setStatus({ type: "error", message: e instanceof Error ? e.message : "2段階認証の開始に失敗しました。" });
     } finally {
       setMfaBusy(false);
     }
@@ -81,14 +98,17 @@ export default function AuthPage() {
   async function onVerifyTotp() {
     if (!supabase) {
       pushToast("Supabase設定が不足しています", "error");
+      setStatus({ type: "error", message: "Supabase設定が不足しています。" });
       return;
     }
     if (!mfaFactorId || !mfaChallengeId) {
       pushToast("先に2段階認証セットアップを開始してください", "error");
+      setStatus({ type: "error", message: "先に2段階認証セットアップを開始してください。" });
       return;
     }
     if (!mfaCode) {
       pushToast("6桁コードを入力してください", "error");
+      setStatus({ type: "error", message: "6桁コードを入力してください。" });
       return;
     }
 
@@ -107,8 +127,10 @@ export default function AuthPage() {
       setMfaQrCode("");
       await refresh();
       pushToast("2段階認証を有効化しました", "success");
+      setStatus({ type: "success", message: "2段階認証を有効化しました。" });
     } catch (e) {
       pushToast(e instanceof Error ? e.message : "2段階認証の検証に失敗しました", "error");
+      setStatus({ type: "error", message: e instanceof Error ? e.message : "2段階認証の検証に失敗しました。" });
     } finally {
       setMfaBusy(false);
     }
@@ -126,6 +148,17 @@ export default function AuthPage() {
           <CardTitle>ログイン</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
+          {status && (
+            <p className={`rounded-md border px-3 py-2 text-sm ${
+              status.type === "success"
+                ? "border-green-300 bg-green-50 text-green-700"
+                : status.type === "error"
+                  ? "border-red-300 bg-red-50 text-red-700"
+                  : "border-blue-300 bg-blue-50 text-blue-700"
+            }`}>
+              {status.message}
+            </p>
+          )}
           <Input placeholder="email@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
           <div className="flex gap-2">
             <Input type={showLoginPassword ? "text" : "password"} placeholder="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
@@ -133,9 +166,12 @@ export default function AuthPage() {
               {showLoginPassword ? "非表示" : "表示"}
             </Button>
           </div>
-          <Button className="w-full" onClick={() => loginWithEmail(loginEmail, loginPassword)}>ログイン</Button>
+          <Button className="w-full" onClick={() => void onLogin()}>ログイン</Button>
           <Button className="w-full" variant="outline" onClick={() => void onIssuePassword()}>パスワードを発行</Button>
-          <Button className="w-full" variant="outline" onClick={() => loginWithGoogle()}>Googleでログイン</Button>
+          <Button className="w-full" variant="outline" onClick={() => {
+            setStatus({ type: "info", message: "Googleログイン画面へ遷移します。" });
+            void loginWithGoogle();
+          }}>Googleでログイン</Button>
           <Link href="/auth/signup" className="block">
             <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">新規登録へ</Button>
           </Link>

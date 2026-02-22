@@ -16,19 +16,18 @@ export default function SignupPage() {
   const [signupPasswordConfirm, setSignupPasswordConfirm] = useState("");
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showSignupPasswordConfirm, setShowSignupPasswordConfirm] = useState(false);
-  const [registerStatus, setRegisterStatus] = useState("");
+  const [registerStatus, setRegisterStatus] = useState<{ type: "success" | "error" | "info"; message: string } | null>(null);
 
   async function onSignup() {
-    setRegisterStatus("");
     if (signupPassword !== signupPasswordConfirm) {
-      setRegisterStatus("パスワード確認が一致しません。");
+      setRegisterStatus({ type: "error", message: "パスワード確認が一致しません。" });
       return;
     }
     const ok = await signupWithEmail(signupEmail, signupPassword);
     if (ok) {
-      setRegisterStatus("受付中です。確認メールの送信をお待ちください。");
+      setRegisterStatus({ type: "success", message: "受付中です。確認メールの送信をお待ちください。" });
     } else {
-      setRegisterStatus("登録に失敗しました。入力内容を確認してください。");
+      setRegisterStatus({ type: "error", message: "登録に失敗しました。入力内容を確認してください。" });
     }
   }
 
@@ -47,6 +46,17 @@ export default function SignupPage() {
           <CardTitle>新規登録</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
+          {registerStatus && (
+            <p className={`rounded-md border px-3 py-2 text-sm ${
+              registerStatus.type === "success"
+                ? "border-green-300 bg-green-50 text-green-700"
+                : registerStatus.type === "error"
+                  ? "border-red-300 bg-red-50 text-red-700"
+                  : "border-blue-300 bg-blue-50 text-blue-700"
+            }`}>
+              {registerStatus.message}
+            </p>
+          )}
           <div className="grid grid-cols-2 gap-2 rounded-lg border border-border p-1">
             <Button variant={signupMode === "email" ? "default" : "ghost"} onClick={() => setSignupMode("email")}>
               メール
@@ -73,9 +83,11 @@ export default function SignupPage() {
               <Button className="w-full bg-blue-600 text-white hover:bg-blue-700" onClick={onSignup}>新規登録する</Button>
             </>
           ) : (
-            <Button className="w-full" variant="outline" onClick={() => loginWithGoogle()}>Googleで登録 / ログイン</Button>
+            <Button className="w-full" variant="outline" onClick={() => {
+              setRegisterStatus({ type: "info", message: "Google登録 / ログイン画面へ遷移します。" });
+              void loginWithGoogle();
+            }}>Googleで登録 / ログイン</Button>
           )}
-          <p className="text-xs text-blue-700">{registerStatus}</p>
         </CardContent>
       </Card>
     </main>
