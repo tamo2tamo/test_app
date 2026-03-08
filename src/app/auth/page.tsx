@@ -81,6 +81,14 @@ export default function AuthPage() {
         return;
       }
 
+      const pendingTotp = factorsData?.totp?.find((factor) => factor.status !== "verified");
+      if (pendingTotp?.id) {
+        const { error: unenrollError } = await supabase.auth.mfa.unenroll({
+          factorId: pendingTotp.id,
+        });
+        if (unenrollError) throw unenrollError;
+      }
+
       const { data: enrollData, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: "totp",
         friendlyName: "NISA TOTP",
