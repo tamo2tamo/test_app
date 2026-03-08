@@ -3,10 +3,11 @@ import { NextResponse } from "next/server";
 import { getSessionContext } from "@/lib/server/auth";
 
 export async function POST(req: Request) {
-  const { supabase, user, isAdmin } = await getSessionContext();
+  const { supabase, user, isAdmin, aal } = await getSessionContext();
   const body = await req.json();
 
   if (!supabase || !user || !isAdmin) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (aal !== "aal2") return NextResponse.json({ error: "aal2_required" }, { status: 403 });
 
   const action = body.action === "approve" ? "published" : body.action === "reject" ? "rejected" : "hidden";
 

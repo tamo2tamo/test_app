@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## MFA / 2FA Checklist (Supabase)
+
+Use this checklist for local and production parity.
+
+1. Supabase Auth -> MFA -> TOTP: enable both `enroll` and `verify`.
+2. Keep sensitive mutations at `aal2` (posts, reactions, reports, admin write operations).
+3. Confirm redirect URLs include `/auth` for password reset and OAuth callback.
+4. In production, verify the project is on a plan that supports MFA.
+5. Validate user journey:
+   - New user enrolls TOTP from `/auth`.
+   - Returning user can challenge with existing factor (without re-enroll).
+   - `/api/me` reports `aal2` after successful verification.

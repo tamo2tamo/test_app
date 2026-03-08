@@ -39,21 +39,31 @@ export async function PUT(req: Request) {
   if (!supabase || !user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const payload = {
+  const payload: Record<string, unknown> = {
     id: user.id,
-    display_name: body.displayName ?? null,
-    age_group: body.ageGroup ?? null,
-    occupation: body.occupation ?? null,
-    annual_income_band: body.annualIncomeBand ?? null,
-    investment_history: body.investmentHistory ?? null,
-    nisa_type: body.nisaType ?? null,
-    risk_tolerance: body.riskTolerance ?? null,
-    investment_policy: body.investmentPolicy ?? null,
-    family_type: body.familyType ?? null,
-    housing_type: body.housingType ?? null,
-    invest_cash_ratio: body.investCashRatio ?? null,
     updated_at: new Date().toISOString(),
   };
+
+  const map: Array<[string, string]> = [
+    ["displayName", "display_name"],
+    ["ageGroup", "age_group"],
+    ["occupation", "occupation"],
+    ["annualIncomeBand", "annual_income_band"],
+    ["investmentHistory", "investment_history"],
+    ["nisaType", "nisa_type"],
+    ["riskTolerance", "risk_tolerance"],
+    ["investmentPolicy", "investment_policy"],
+    ["familyType", "family_type"],
+    ["housingType", "housing_type"],
+    ["investCashRatio", "invest_cash_ratio"],
+    ["mfaEnabled", "mfa_enabled"],
+  ];
+
+  for (const [from, to] of map) {
+    if (Object.prototype.hasOwnProperty.call(body, from)) {
+      payload[to] = body[from];
+    }
+  }
 
   const { error } = await supabase.from("profiles").upsert(payload, { onConflict: "id" });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

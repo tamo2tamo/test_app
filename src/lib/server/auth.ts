@@ -20,7 +20,13 @@ export async function getSessionContext() {
     isAdmin = Boolean(data?.is_admin);
   }
 
-  const aal = ((user?.app_metadata as Record<string, unknown> | undefined)?.aal ?? "aal1") as "aal1" | "aal2";
+  let aal: "aal1" | "aal2" = "aal1";
+  if (user) {
+    const {
+      data: { currentLevel },
+    } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (currentLevel === "aal2") aal = "aal2";
+  }
 
   return { supabase, user, isAdmin, aal };
 }

@@ -65,6 +65,22 @@ export default function AuthPage() {
 
     setMfaBusy(true);
     try {
+      const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+      if (factorsError) throw factorsError;
+      const existingTotp = factorsData?.totp?.find((factor) => factor.status === "verified");
+      if (existingTotp?.id) {
+        const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({
+          factorId: existingTotp.id,
+        });
+        if (challengeError) throw challengeError;
+        setMfaFactorId(existingTotp.id);
+        setMfaChallengeId(challengeData.id);
+        setMfaQrCode("");
+        pushToast("登録済みの認証アプリで6桁コードを入力してください", "info");
+        setStatus({ type: "info", message: "登録済みの認証アプリで6桁コードを入力してください。" });
+        return;
+      }
+
       const { data: enrollData, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: "totp",
         friendlyName: "NISA TOTP",
@@ -125,6 +141,11 @@ export default function AuthPage() {
       setMfaFactorId("");
       setMfaChallengeId("");
       setMfaQrCode("");
+      await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mfaEnabled: true }),
+      });
       await refresh();
       pushToast("2段階認証を有効化しました", "success");
       setStatus({ type: "success", message: "2段階認証を有効化しました。" });
@@ -185,21 +206,23 @@ export default function AuthPage() {
               <div className="space-y-3 rounded-md border border-border p-3">
                 <p className="text-sm font-medium">2段階認証（TOTP）を設定</p>
                 <p className="text-xs text-muted-foreground">新規登録後はここで2段階認証を完了してください。投稿やリアクションに `aal2` が必要です。</p>
-                {!mfaQrCode && (
+                {!mfaChallengeId && (
                   <Button className="w-full" onClick={() => void onStartTotpSetup()} disabled={mfaBusy}>
-                    {mfaBusy ? "開始中..." : "2段階認証を開始"}
+                    {mfaBusy ? "処理中..." : "2段階認証を開始 / 再認証"}
                   </Button>
                 )}
-                {mfaQrCode && (
+                {mfaChallengeId && (
                   <div className="space-y-2">
-                    <Image
-                      src={`data:image/svg+xml;utf8,${encodeURIComponent(mfaQrCode)}`}
-                      alt="TOTP QR Code"
-                      width={176}
-                      height={176}
-                      unoptimized
-                      className="mx-auto rounded border border-border bg-white p-2"
-                    />
+                    {mfaQrCode && (
+                      <Image
+                        src={`data:image/svg+xml;utf8,${encodeURIComponent(mfaQrCode)}`}
+                        alt="TOTP QR Code"
+                        width={176}
+                        height={176}
+                        unoptimized
+                        className="mx-auto rounded border border-border bg-white p-2"
+                      />
+                    )}
                     <Input
                       placeholder="6桁コード"
                       value={mfaCode}
