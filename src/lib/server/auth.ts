@@ -22,9 +22,8 @@ export async function getSessionContext() {
 
   let aal: "aal1" | "aal2" = "aal1";
   if (user) {
-    const {
-      data: { currentLevel },
-    } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    const currentLevel = data?.currentLevel ?? null;
     if (currentLevel === "aal2") aal = "aal2";
   }
 
